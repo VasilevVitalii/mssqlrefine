@@ -1,6 +1,6 @@
 {
     "name": "mssqlrefine",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Сlearing mssql text from comments and string variables",
     "main": "dist/src/index.js",
     "scripts": {
