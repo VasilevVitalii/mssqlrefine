@@ -1,15 +1,16 @@
-import * as app from '../src/refiner'
+import * as lib from '../src/refiner'
+import * as app from '../src'
 
-type TTestScript = {
+type TRefinerTestList = {
     text: string[],
     res: string[],
     initDeep: number,
-    initDeepType: app.TEntry | undefined,
+    initDeepType: lib.TEntry | undefined,
     resDeep: number,
-    resDeepType: app.TEntry | undefined
+    resDeepType: lib.TEntry | undefined
 }
 
-const testScripts = [
+const refinerTestList = [
     {text: ["'asd' fff"], res: ["##### fff"], initDeep: 0, initDeepType: undefined, resDeep: 0, resDeepType: undefined},
     {text: ["fff 'asd'"], res: ["fff #####"], initDeep: 0, initDeepType: undefined, resDeep: 0, resDeepType: undefined},
     {text: ["fff 'asd' ddd"], res: ["fff ##### ddd"], initDeep: 0, initDeepType: undefined, resDeep: 0, resDeepType: undefined},
@@ -85,42 +86,64 @@ const testScripts = [
     {text: "aa%b*/b'".split('%'), res: "##%#####".split('%'), initDeep: 1, initDeepType: 'string', resDeep: 0, resDeepType: undefined},
     {text: "--a%--b".split('%'), res: "###%###".split('%'), initDeep: 1, initDeepType: 'comment-multi', resDeep: 1, resDeepType: 'comment-multi'},
     {text: "--a%-'a/*-b".split('%'), res: "###%##a####".split('%'), initDeep: 1, initDeepType: 'string', resDeep: 1, resDeepType: 'comment-multi'}
-] as TTestScript[]
+] as TRefinerTestList[]
 
-const onlyOneTest = -1
-let hasError = false
+const onlyOneRefinerTestIdx = 12
+const refinerTestTitle = 'Refiner and SimpleRefine test'
 
-testScripts.forEach((test, idx) => {
-    hasError = false
-    if (onlyOneTest >= 0 && onlyOneTest !== idx) return
-    const res = app.Refine(test.initDeep, test.initDeepType, test.text, '#')
-    if (test.text.length !== res.length) {
-        hasError = true
-        console.error(`test #${idx} - different count arr(test - ${test.text.length}, res - ${res.length})`)
+refinerTestList.forEach((test, idx) => {
+    if (onlyOneRefinerTestIdx >= 0 && onlyOneRefinerTestIdx !== idx) return
+    const res1 = lib.Refine(test.initDeep, test.initDeepType, test.text, '#')
+    const res2 = app.SimpleRefine(test.text)
+
+    if (test.text.length !== res1.length) {
+        console.error(`${refinerTestTitle} #${idx} - different count arr(test - ${test.text.length}, res1 - ${res1.length})`)
     } else {
-        for (let i = 0; i < res.length; i++) {
-            if (test.text[i].length !== res[i].line.length) {
-                hasError = true
-                console.error(`test #${idx} - different len in line ${i} (test - ${test.text[i].length}, res - ${res[i].line.length})`)
+        for (let i = 0; i < res1.length; i++) {
+            if (test.text[i].length !== res1[i].line.length) {
+                console.error(`${refinerTestTitle} #${idx} - different len in line ${i} (test - ${test.text[i].length}, res1 - ${res1[i].line.length})`)
             }
-            if (test.res[i] !== res[i].line) {
-                hasError = true
-                console.error(`test #${idx} - different text in line ${i} (test - "${test.res[i]}", res - "${res[i].line}")`)
+            if (test.res[i] !== res1[i].line) {
+                console.error(`${refinerTestTitle} #${idx} - different text in line ${i} (test - "${test.res[i]}", res1 - "${res1[i].line}")`)
             }
         }
     }
-    if (test.resDeep !== res[res.length - 1].endDeep) {
-        hasError = true
-        console.error(`test #${idx} - different deep (test - ${test.resDeep}, res - ${res[res.length - 1].endDeep})`)
+    if (test.resDeep !== res1[res1.length - 1].endDeep) {
+        console.error(`${refinerTestTitle} #${idx} - different deep (test - ${test.resDeep}, res1 - ${res1[res1.length - 1].endDeep})`)
     }
 
-    if ((test.resDeepType || res[res.length - 1].endDeepType) && test.resDeepType !== res[res.length - 1].endDeepType) {
-        hasError = true
-        console.error(`test #${idx} - different deep type (test - ${test.resDeepType}, res - ${res[res.length - 1].endDeepType})`)
+    if ((test.resDeepType || res1[res1.length - 1].endDeepType) && test.resDeepType !== res1[res1.length - 1].endDeepType) {
+        console.error(`${refinerTestTitle} #${idx} - different deep type (test - ${test.resDeepType}, res1 - ${res1[res1.length - 1].endDeepType})`)
     }
-    if (hasError) {
-        console.warn(`test #${idx} has error`)
-    } else {
-        console.log(`test #${idx} success`)
+
+    if (test.initDeep === 0 && !test.initDeepType) {
+        if (test.text.length !== res2.length) {
+            console.error(`${refinerTestTitle} #${idx} - different count arr(test - ${test.text.length}, res2 - ${res2.length})`)
+        } else {
+            for (let i = 0; i < res2.length; i++) {
+                if (test.text[i].length !== res2[i].length) {
+                    console.error(`${refinerTestTitle} #${idx} - different len in line ${i} (test - ${test.text[i].length}, res2 - ${res2[i].length})`)
+                }
+                if (test.res[i].replaceAll('#',' ') !== res2[i]) {
+                    console.error(`${refinerTestTitle} #${idx} - different text in line ${i} (test - "${test.res[i].replace('#',' ')}", res2 - "${res2[i]}")`)
+                }
+            }
+        }
     }
 })
+console.log(`${refinerTestTitle} complete`)
+
+const r = app.CreateRefineService(['select 1','/*','select 2','*/','select 3'])
+r.refine()
+if (r.TextRefined.map(m => {return m.line}).join('') !== `select 1${' '.repeat(12)}select 3`) {
+    console.error('RefineService: error in test #1')
+}
+
+r.TextRaw.splice(2)
+r.TextRaw.push(...['*/','select 3 /*a*/'])
+r.refineAt(2)
+if (r.TextRefined.map(m => {return m.line}).join('') !== `select 1${' '.repeat(4)}select 3 ${' '.repeat(5)}`) {
+    console.error('RefineService: error in test #2')
+}
+
+console.log(`RefineService complete`)
