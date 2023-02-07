@@ -10,5 +10,5 @@ export function SimpleRefine(textRaw: string | string[]): string[] {
     return Refine(0, undefined, Array.isArray(textRaw) ? textRaw : textRaw.split(EOL), ' ').map(m => { return m.line})
 }
 
-
+export { App as RefineService }
 
