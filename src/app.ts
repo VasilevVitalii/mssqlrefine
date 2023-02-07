@@ -1,6 +1,13 @@
 import { Refine, TClearLine, TEntry } from './refiner'
 
-export class App {
+export interface IApp {
+    refine()
+    refineAt(lineIdx: number)
+    get TextRefined(): TClearLine[]
+    get TextRaw(): string[]
+}
+
+export class App implements IApp {
     private _textRaw: string[]
     private _textRefined: TClearLine[]
 
