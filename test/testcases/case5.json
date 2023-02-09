@@ -1,0 +1,15 @@
+{
+	"test": [
+		"/*hi!*/"
+	],
+	"result": [
+		{
+			"chunks": [
+				{
+					"kind": "comment-multi",
+					"text": "/*hi!*/"
+				}
+			]
+		}
+	]
+}

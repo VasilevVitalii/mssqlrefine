@@ -1,0 +1,32 @@
+{
+    "test": [
+		"1/*c",
+        "o*/2"
+    ],
+    "result": [
+        {
+            "chunks": [
+                {
+                    "kind": "code",
+                    "text": "1"
+                },
+                {
+                    "kind": "comment-multi",
+                    "text": "/*c"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "kind": "comment-multi",
+                    "text": "o*/"
+                },
+                {
+                    "kind": "code",
+                    "text": "2"
+                }
+            ]
+        }
+    ]
+}

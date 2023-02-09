@@ -1,0 +1,44 @@
+{
+    "test": [
+		"/* pri/*n*/t h--ello ",
+        "a*/PRI[]NT 'he''llo'"
+    ],
+    "result": [
+        {
+            "chunks": [
+                {
+                    "kind": "comment-multi",
+                    "text": "/* pri/*n*/t h--ello "
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "kind": "comment-multi",
+                    "text": "a*/"
+                },
+                {
+                    "kind": "code",
+                    "text": "PRI"
+                },
+                {
+                    "kind": "code-in-bracket",
+                    "text": "[]"
+                },
+                {
+                    "kind": "code",
+                    "text": "NT"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "string",
+                    "text": "'he''llo'"
+                }
+            ]
+        }
+    ]
+}

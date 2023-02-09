@@ -1,0 +1,129 @@
+{
+    "test": [
+        "select 'ta' ga /*ss*/, 'tb' [fb bf] --zzz /* ",
+        "from ddd /*v",
+        "z/**/*/ order by id"
+    ],
+    "result": [
+        {
+            "chunks": [
+                {
+                    "kind": "code",
+                    "kindCode": "reserved",
+                    "text": "select"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "string",
+                    "text": "'ta'"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "code",
+                    "text": "ga"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "comment-multi",
+                    "text": "/*ss*/"
+                },
+                {
+                    "kind": "comma",
+                    "text": ","
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "string",
+                    "text": "'tb'"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "code-in-bracket",
+                    "text": "[fb bf]"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "comment-single",
+                    "text": "--zzz /* "
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "kind": "code",
+                    "kindCode": "reserved",
+                    "text": "from"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "code",
+                    "text": "ddd"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "comment-multi",
+                    "text": "/*v"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "kind": "comment-multi",
+                    "text": "z/**/*/"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "code",
+                    "kindCode": "reserved",
+                    "text": "order"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "code",
+                    "kindCode": "reserved",
+                    "text": "by"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "code",
+                    "text": "id"
+                }
+            ]
+        }
+    ]
+}

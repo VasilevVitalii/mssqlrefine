@@ -1,0 +1,74 @@
+{
+    "test": [
+        "select a, b-d, c",
+        "from ddd"
+    ],
+    "result": [
+        {
+            "chunks": [
+                {
+                    "kind": "code",
+                    "kindCode": "reserved",
+                    "text": "select"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "code",
+                    "text": "a"
+                },
+                {
+                    "kind": "comma",
+                    "text": ","
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "code",
+                    "text": "b"
+                },
+                {
+                    "kind": "operator",
+                    "text": "-"
+                },
+                {
+                    "kind": "code",
+                    "text": "d"
+                },
+                {
+                    "kind": "comma",
+                    "text": ","
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "code",
+                    "text": "c"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "kind": "code",
+                    "kindCode": "reserved",
+                    "text": "from"
+                },
+                {
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "kind": "code",
+                    "text": "ddd"
+                }
+            ]
+        }
+    ]
+}

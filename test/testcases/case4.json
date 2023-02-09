@@ -1,0 +1,47 @@
+{
+	"test": [
+		"h-e/l*l+o"
+	],
+	"result": [
+		{
+			"chunks": [
+				{
+					"kind": "code",
+					"text": "h"
+				},
+				{
+					"kind": "operator",
+					"text": "-"
+				},
+				{
+					"kind": "code",
+					"text": "e"
+				},
+				{
+					"kind": "operator",
+					"text": "/"
+				},
+				{
+					"kind": "code",
+					"text": "l"
+				},
+				{
+					"kind": "operator",
+					"text": "*"
+				},
+				{
+					"kind": "code",
+					"text": "l"
+				},
+				{
+					"kind": "operator",
+					"text": "+"
+				},
+				{
+					"kind": "code",
+					"text": "o"
+				}
+			]
+		}
+	]
+}

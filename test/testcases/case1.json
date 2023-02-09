@@ -1,0 +1,15 @@
+{
+	"test": [
+		"hi"
+	],
+	"result": [
+		{
+			"chunks": [
+				{
+					"kind": "code",
+					"text": "hi"
+				}
+			]
+		}
+	]
+}
