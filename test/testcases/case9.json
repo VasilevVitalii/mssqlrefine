@@ -8,59 +8,73 @@
         {
             "chunks": [
                 {
+                    "idx": 0,
                     "kind": "code",
                     "kindCode": "reserved",
                     "text": "select"
                 },
                 {
+                    "idx": 6,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 7,
                     "kind": "string",
                     "text": "'ta'"
                 },
                 {
+                    "idx": 11,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 12,
                     "kind": "code",
                     "text": "ga"
                 },
                 {
+                    "idx": 14,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 15,
                     "kind": "comment-multi",
                     "text": "/*ss*/"
                 },
                 {
+                    "idx": 21,
                     "kind": "comma",
                     "text": ","
                 },
                 {
+                    "idx": 22,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 23,
                     "kind": "string",
                     "text": "'tb'"
                 },
                 {
+                    "idx": 27,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 28,
                     "kind": "code-in-bracket",
                     "text": "[fb bf]"
                 },
                 {
+                    "idx": 35,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 36,
                     "kind": "comment-single",
                     "text": "--zzz /* "
                 }
@@ -69,23 +83,28 @@
         {
             "chunks": [
                 {
+                    "idx": 0,
                     "kind": "code",
                     "kindCode": "reserved",
                     "text": "from"
                 },
                 {
+                    "idx": 4,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 5,
                     "kind": "code",
                     "text": "ddd"
                 },
                 {
+                    "idx": 8,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 9,
                     "kind": "comment-multi",
                     "text": "/*v"
                 }
@@ -94,32 +113,39 @@
         {
             "chunks": [
                 {
+                    "idx": 0,
                     "kind": "comment-multi",
                     "text": "z/**/*/"
                 },
                 {
+                    "idx": 7,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 8,
                     "kind": "code",
                     "kindCode": "reserved",
                     "text": "order"
                 },
                 {
+                    "idx": 13,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 14,
                     "kind": "code",
                     "kindCode": "reserved",
                     "text": "by"
                 },
                 {
+                    "idx": 16,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 17,
                     "kind": "code",
                     "text": "id"
                 }

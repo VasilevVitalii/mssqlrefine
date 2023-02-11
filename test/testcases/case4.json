@@ -1,45 +1,64 @@
 {
 	"test": [
-		"h-e/l*l+o"
+		"h-e/l*l+o.!"
 	],
 	"result": [
 		{
 			"chunks": [
 				{
+					"idx": 0,
 					"kind": "code",
 					"text": "h"
 				},
 				{
+					"idx": 1,
 					"kind": "operator",
 					"text": "-"
 				},
 				{
+					"idx": 2,
 					"kind": "code",
 					"text": "e"
 				},
 				{
+					"idx": 3,
 					"kind": "operator",
 					"text": "/"
 				},
 				{
+					"idx": 4,
 					"kind": "code",
 					"text": "l"
 				},
 				{
+					"idx": 5,
 					"kind": "operator",
 					"text": "*"
 				},
 				{
+					"idx": 6,
 					"kind": "code",
 					"text": "l"
 				},
 				{
+					"idx": 7,
 					"kind": "operator",
 					"text": "+"
 				},
 				{
+					"idx": 8,
 					"kind": "code",
 					"text": "o"
+				},
+				{
+					"idx": 9,
+					"kind": "point",
+					"text": "."
+				},
+				{
+					"idx": 10,
+					"kind": "operator",
+					"text": "!"
 				}
 			]
 		}

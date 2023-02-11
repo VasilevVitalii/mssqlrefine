@@ -7,47 +7,58 @@
         {
             "chunks": [
                 {
+                    "idx": 0,
                     "kind": "code",
                     "kindCode": "reserved",
                     "text": "select"
                 },
                 {
+                    "idx": 6,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 7,
                     "kind": "code",
                     "text": "a"
                 },
                 {
+                    "idx": 8,
                     "kind": "comma",
                     "text": ","
                 },
                 {
+                    "idx": 9,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 10,
                     "kind": "code",
                     "text": "b"
                 },
                 {
+                    "idx": 11,
                     "kind": "operator",
                     "text": "-"
                 },
                 {
+                    "idx": 12,
                     "kind": "code",
                     "text": "d"
                 },
                 {
+                    "idx": 13,
                     "kind": "comma",
                     "text": ","
                 },
                 {
+                    "idx": 14,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 15,
                     "kind": "code",
                     "text": "c"
                 }
@@ -56,15 +67,18 @@
         {
             "chunks": [
                 {
+                    "idx": 0,
                     "kind": "code",
                     "kindCode": "reserved",
                     "text": "from"
                 },
                 {
+                    "idx": 4,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 5,
                     "kind": "code",
                     "text": "ddd"
                 }

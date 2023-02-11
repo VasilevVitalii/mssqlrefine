@@ -7,6 +7,7 @@
         {
             "chunks": [
                 {
+                    "idx": 0,
                     "kind": "comment-multi",
                     "text": "/* pri/*n*/t h--ello "
                 }
@@ -15,26 +16,32 @@
         {
             "chunks": [
                 {
+                    "idx": 0,
                     "kind": "comment-multi",
                     "text": "a*/"
                 },
                 {
+                    "idx": 3,
                     "kind": "code",
                     "text": "PRI"
                 },
                 {
+                    "idx": 6,
                     "kind": "code-in-bracket",
                     "text": "[]"
                 },
                 {
+                    "idx": 8,
                     "kind": "code",
                     "text": "NT"
                 },
                 {
+                    "idx": 10,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
+                    "idx": 11,
                     "kind": "string",
                     "text": "'he''llo'"
                 }

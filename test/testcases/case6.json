@@ -7,10 +7,12 @@
         {
             "chunks": [
                 {
+                    "idx": 0,
                     "kind": "code",
                     "text": "1"
                 },
                 {
+                    "idx": 1,
                     "kind": "comment-multi",
                     "text": "/*c"
                 }
@@ -19,10 +21,12 @@
         {
             "chunks": [
                 {
+                    "idx": 0,
                     "kind": "comment-multi",
                     "text": "o*/"
                 },
                 {
+                    "idx": 3,
                     "kind": "code",
                     "text": "2"
                 }

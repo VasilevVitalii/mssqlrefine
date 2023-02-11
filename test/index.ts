@@ -1,10 +1,25 @@
+import os from 'os'
 import fs from 'fs'
 import path from "path";
 import { Parse } from "../src/tokenizator";
 import * as mssqldriver from 'mssqldriver'
+import { exit } from 'process';
 
 //const a = Parse(["select a, b, c","from ddd"])
 //console.log(JSON.stringify(a, null, '\t'))
+
+// const dictionary = new Map<string, string>()
+// dictionary.set('bit', 'datatype')
+// dictionary.set('int', 'datatype')
+// dictionary.set('xml', 'datatype')
+// dictionary.set('add', 'reserved')
+// let a = dictionary.get('xml')
+// let b = dictionary.get('aaa')
+
+// { kindCode: 'datatype', text: 'bit' },
+// { kindCode: 'datatype', text: 'int' },
+// { kindCode: 'datatype', text: 'xml' },
+// { kindCode: 'reserved', text: 'add' },
 
 const onlyFiles = [
 ]
@@ -92,12 +107,51 @@ const mssql = mssqldriver.Create({
         database: connection.database
     }
 })
-mssql.exec([`print 'Hello'`, `select * from sys.columns`], undefined, callbackExec => {
+mssql.exec([
+    `SELECT [schema], [name], [type], REPLACE(REPLACE([text],'#x0D;',''),'&#x0D;','') [text] FROM (`,
+    `    SELECT`,
+    `        s.[name] [schema],`,
+    `        o.[name] [name],`,
+    `        o.[type],`,
+    `        STUFF((`,
+    `            SELECT CONCAT(CHAR(13) + CHAR(10), c.[text])`,
+    `            FROM syscomments c`,
+    `            WHERE c.id = o.object_id`,
+    `            ORDER BY c.number`,
+    `            FOR XML PATH('')), 1, 1, '') [text]`,
+    `    FROM sys.objects o`,
+    `    INNER JOIN sys.schemas s ON s.schema_id = o.schema_id`,
+    `    WHERE o.[type] IN ('P','FN','IF','TF') `,
+    `    GROUP BY s.[name], o.[name], o.[type], o.object_id`,
+    `) q`,
+    `ORDER BY [schema], [name], [type], [text]`,
+].join(os.EOL) , undefined, callbackExec => {
     if (callbackExec.kind === 'finish') {
         if (callbackExec.finish.error) {
             console.error(callbackExec.finish.error.message)
             return
         }
-        console.log(`finish`, callbackExec.finish)
+        const rows = callbackExec.finish.tables[0].rows
+        rows.forEach(row=>{
+            const t = row.text.replaceAll('&\n','\n').split('\n')
+            const p = Parse (t)
+            if (t.length !== p.length) {
+                console.error(`error test (length) from sql [${row.type.trim()}] ${row.schema}.${row.name} - in server=${t.length}, in parse=${p.length}`)
+                return
+            }
+
+            for (let i = 0; i < t.length; i++) {
+                const ttt = t[i]
+                const ppp = p[i].chunks.map(m => m.text).join('')
+                if (ttt !== ppp) {
+                    console.error(`error test (text) from sql [${row.type.trim()}] ${row.schema}.${row.name} in line ${i}`)
+                    console.error(`need:   ${ttt}`)
+                    console.error(`result: ${ppp}`)
+                    return
+                }
+            }
+
+            console.log(`success test from sql [${row.type.trim()}] ${row.schema}.${row.name}`)
+        })
     }
 })

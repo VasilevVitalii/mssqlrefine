@@ -6,6 +6,7 @@
 		{
 			"chunks": [
 				{
+					"idx": 0,
 					"kind": "code-in-bracket",
 					"text": "[h i !]"
 				}

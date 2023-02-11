@@ -1,8 +1,18 @@
 import { TWorldItem, GetWorld } from "./world"
 
-export type TKind = 'boundary' | 'code' | 'code-in-bracket' | 'comment-single' | 'comment-multi' | 'string' | 'comma' | 'semicolon' | 'operator'
+export type TKind =
+    'boundary' |
+    'code' |
+    'code-in-bracket' |
+    'comment-single' |
+    'comment-multi' |
+    'string' |
+    'comma' |
+    'semicolon' |
+    'operator' |
+    'point'
 
-export type TLineChunk = { kind: TKind } & TWorldItem
+export type TLineChunk = { idx: number, kind: TKind } & TWorldItem
 
 type TLine = {
     chunks: TLineChunk[]
@@ -28,12 +38,12 @@ export function Parse(text: string[]): TLine[] {
 
             if (!buffKind) {
                 buffKind = getKindStart(ch, chidx, lineText)
-                if (buffKind === 'comma' || buffKind === 'semicolon' || buffKind === 'operator') {
-                    line.chunks.push({ kind: buffKind, kindCode: undefined, text: ch })
+                if (buffKind === 'comma' || buffKind === 'semicolon' || buffKind === 'operator' || buffKind === 'point') {
+                    line.chunks.push({ idx: chidx, kind: buffKind, kindCode: undefined, text: ch })
                     buffKind = undefined
                     continue
                 } if (buffKind === 'comment-single') {
-                    line.chunks.push({ kind: buffKind, kindCode: undefined, text: lineText.substring(chidx) })
+                    line.chunks.push({ idx: chidx, kind: buffKind, kindCode: undefined, text: lineText.substring(chidx) })
                     buffKind = undefined
                     break
                 } else if (buffKind === 'comment-multi') {
@@ -49,7 +59,7 @@ export function Parse(text: string[]): TLine[] {
 
             if (buffKind === 'boundary') {
                 if (!space.test(ch)) {
-                    line.chunks.push({ kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx) })
+                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx) })
                     buffKind = null
                     chidx--
                 }
@@ -60,7 +70,7 @@ export function Parse(text: string[]): TLine[] {
                 if (ch === '\'') {
                     const nech = getNech(chidx, lineText)
                     if (nech !== '\'') {
-                        line.chunks.push({ kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 1) })
+                        line.chunks.push({ idx: buffStartIdx, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 1) })
                         buffKind = null
                     } else {
                         chidx++
@@ -71,7 +81,7 @@ export function Parse(text: string[]): TLine[] {
 
             if (buffKind === 'code-in-bracket') {
                 if (ch === ']') {
-                    line.chunks.push({ kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 1) })
+                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 1) })
                     buffKind = null
                 }
                 continue
@@ -83,7 +93,7 @@ export function Parse(text: string[]): TLine[] {
                     if (nech === '/') {
                         deep--
                         if (deep <= 0) {
-                            line.chunks.push({ kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 2) })
+                            line.chunks.push({ idx: buffStartIdx, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 2) })
                             buffKind = null
                         }
                         chidx++
@@ -100,9 +110,9 @@ export function Parse(text: string[]): TLine[] {
             }
 
             //code
-            if (ch === ',' || ch === ';' || (ch !== '-' && ch !== '/' && operator.includes(ch))) {
-                line.chunks.push({ kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx)) })
-                line.chunks.push({ kind: ch === ',' ? 'comma' : ch === ';' ? 'semicolon' : 'operator', kindCode: undefined, text: ch })
+            if (ch === ',' || ch === ';' || ch === '.' || (ch !== '-' && ch !== '/' && operator.includes(ch))) {
+                line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx), 'origin') })
+                line.chunks.push({ idx: chidx, kind: ch === ',' ? 'comma' : ch === ';' ? 'semicolon' : ch === '.' ? 'point' : 'operator', kindCode: undefined, text: ch })
                 buffKind = undefined
                 continue
             }
@@ -110,34 +120,34 @@ export function Parse(text: string[]): TLine[] {
             if (ch === '-') {
                 const nech = getNech(chidx, lineText)
                 if (nech === '-') {
-                    line.chunks.push({ kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx)) })
-                    line.chunks.push({ kind: buffKind, kindCode: undefined, text: lineText.substring(chidx) })
+                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx), 'origin') })
+                    line.chunks.push({ idx: chidx, kind: buffKind, kindCode: undefined, text: lineText.substring(chidx) })
                     buffKind = undefined
                     break
                 } else {
-                    line.chunks.push({ kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx)) })
-                    line.chunks.push({ kind: 'operator', kindCode: undefined, text: ch })
+                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx), 'origin') })
+                    line.chunks.push({ idx: chidx, kind: 'operator', kindCode: undefined, text: ch })
                     buffKind = undefined
                     continue
                 }
             }
 
             if (space.test(ch)) {
-                line.chunks.push({ kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx)) })
+                line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx), 'origin') })
                 buffKind = 'boundary'
                 buffStartIdx = chidx
                 continue
             }
 
             if (ch === '\'') {
-                line.chunks.push({ kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx)) })
+                line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx), 'origin') })
                 buffKind = 'string'
                 buffStartIdx = chidx
                 continue
             }
 
             if (ch === '[') {
-                line.chunks.push({ kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx)) })
+                line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx), 'origin') })
                 buffKind = 'code-in-bracket'
                 buffStartIdx = chidx
                 continue
@@ -146,14 +156,14 @@ export function Parse(text: string[]): TLine[] {
             if (ch === '/') {
                 const nech = getNech(chidx, lineText)
                 if (nech === '*') {
-                    line.chunks.push({ kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx)) })
+                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx), 'origin') })
                     deep = 1
                     buffKind = 'comment-multi'
                     buffStartIdx = chidx
                     chidx++
                 } else {
-                    line.chunks.push({ kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx)) })
-                    line.chunks.push({ kind: 'operator', kindCode: undefined, text: ch })
+                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx, chidx), 'origin') })
+                    line.chunks.push({ idx: chidx, kind: 'operator', kindCode: undefined, text: ch })
                     buffKind = undefined
                 }
                 continue
@@ -162,9 +172,9 @@ export function Parse(text: string[]): TLine[] {
 
         if (buffKind) {
             if (buffKind === 'code') {
-                line.chunks.push({ kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx)) })
+                line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(lineText.substring(buffStartIdx), 'origin') })
             } else {
-                line.chunks.push({ kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx) })
+                line.chunks.push({ idx: buffStartIdx, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx) })
             }
         }
 
