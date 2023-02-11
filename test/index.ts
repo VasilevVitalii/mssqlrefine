@@ -114,7 +114,7 @@ mssql.exec([
     `        o.[name] [name],`,
     `        o.[type],`,
     `        STUFF((`,
-    `            SELECT CONCAT(CHAR(13) + CHAR(10), c.[text])`,
+    `            SELECT CHAR(13) + CHAR(10) + c.[text]`,
     `            FROM syscomments c`,
     `            WHERE c.id = o.object_id`,
     `            ORDER BY c.number`,
