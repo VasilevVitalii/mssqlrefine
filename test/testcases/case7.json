@@ -9,7 +9,11 @@
                 {
                     "idx": 0,
                     "kind": "code",
-                    "kindCode": "reserved",
+                    "kindCode": [
+                        "statement",
+                        "query",
+                        "reserved"
+                    ],
                     "text": "select"
                 },
                 {
@@ -69,7 +73,10 @@
                 {
                     "idx": 0,
                     "kind": "code",
-                    "kindCode": "reserved",
+                    "kindCode": [
+                        "query",
+                        "reserved"
+                    ],
                     "text": "from"
                 },
                 {

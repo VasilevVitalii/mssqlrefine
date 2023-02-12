@@ -25,7 +25,11 @@ console.log(tokens)
 			{
 				"idx": 0,
 				"kind": "code",
-				"kindCode": "reserved",
+				"kindCode": [
+					"statement",
+					"query",
+					"reserved"
+				],
 				"text": "SELECT"
 			},
 			{
@@ -101,7 +105,10 @@ console.log(tokens)
 			{
 				"idx": 41,
 				"kind": "code",
-				"kindCode": "reserved",
+				"kindCode": [
+					"statement",
+					"reserved"
+				],
 				"text": "AS"
 			},
 			{
@@ -121,7 +128,10 @@ console.log(tokens)
 			{
 				"idx": 0,
 				"kind": "code",
-				"kindCode": "reserved",
+				"kindCode": [
+					"query",
+					"reserved"
+				],
 				"text": "FROM"
 			},
 			{
@@ -142,7 +152,10 @@ console.log(tokens)
 			{
 				"idx": 13,
 				"kind": "code",
-				"kindCode": "reserved",
+				"kindCode": [
+					"query",
+					"reserved"
+				],
 				"text": "ORDER"
 			},
 			{
@@ -153,7 +166,10 @@ console.log(tokens)
 			{
 				"idx": 19,
 				"kind": "code",
-				"kindCode": "reserved",
+				"kindCode": [
+					"query",
+					"reserved"
+				],
 				"text": "BY"
 			},
 			{

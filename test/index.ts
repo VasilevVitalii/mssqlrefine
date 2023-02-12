@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from "path";
 import { CreateRefineService } from "../src";
 import * as mssqldriver from 'mssqldriver'
+import { world } from '../src/world'
 
 const onlyFiles = []
 const pathtest = path.join(__dirname, '..', '..', 'test')
@@ -10,6 +11,33 @@ const pathtestcases = path.join(pathtest, 'testcases')
 
 const refineService = CreateRefineService()
 refineService.prepareWorldsAll()
+
+let hasWordError = false
+
+world.forEach((w,i) => {
+    w.forEach((p, ii) => {
+        if (p.text.length !== i) {
+            console.error(`in world list in array ${i} present world "${p.text}" with len ${p.text.length}`)
+            hasWordError = true
+        }
+        if (p.text.toLowerCase() !== p.text) {
+            console.error(`in world list in array ${i} present world "${p.text}" has bad case`)
+            hasWordError = true
+        }
+        for (let jj = ii + 1; jj < w.length; jj++) {
+            if (w[jj].text === p.text && w[jj].kindCode === p.kindCode) {
+                console.error(`in world list in array ${i} world "${p.text}" non unique`)
+                hasWordError = true
+            }
+        }
+    })
+
+})
+if (hasWordError) {
+    console.log('word has error(s)')
+} else {
+    console.log('word ok')
+}
 
 fs.readdir(pathtestcases, (err, files) => {
     if (err) {

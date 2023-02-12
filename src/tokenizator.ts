@@ -1,4 +1,4 @@
-import { TWorld, GetWorld, TWorldMap } from "./world"
+import { GetWorld, TWorldMap, TWorldKinds } from "./world"
 
 export type TTokenKind =
     'boundary' |
@@ -12,7 +12,7 @@ export type TTokenKind =
     'operator' |
     'point'
 
-export type TTokenLineChunk = { idx: number, kind: TTokenKind } & TWorld
+export type TTokenLineChunk = { idx: number, kind: TTokenKind } & TWorldKinds
 
 export type TTokenLine = {
     chunks: TTokenLineChunk[]
