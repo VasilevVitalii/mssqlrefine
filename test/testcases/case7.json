@@ -1,6 +1,6 @@
 {
     "test": [
-        "select a, b-d, c",
+        "select  a, b-d, c",
         "from ddd"
     ],
     "result": [
@@ -15,50 +15,50 @@
                 {
                     "idx": 6,
                     "kind": "boundary",
-                    "text": " "
+                    "text": "  "
                 },
                 {
-                    "idx": 7,
+                    "idx": 8,
                     "kind": "code",
                     "text": "a"
                 },
                 {
-                    "idx": 8,
+                    "idx": 9,
                     "kind": "comma",
                     "text": ","
                 },
                 {
-                    "idx": 9,
+                    "idx": 10,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
-                    "idx": 10,
+                    "idx": 11,
                     "kind": "code",
                     "text": "b"
                 },
                 {
-                    "idx": 11,
+                    "idx": 12,
                     "kind": "operator",
                     "text": "-"
                 },
                 {
-                    "idx": 12,
+                    "idx": 13,
                     "kind": "code",
                     "text": "d"
                 },
                 {
-                    "idx": 13,
+                    "idx": 14,
                     "kind": "comma",
                     "text": ","
                 },
                 {
-                    "idx": 14,
+                    "idx": 15,
                     "kind": "boundary",
                     "text": " "
                 },
                 {
-                    "idx": 15,
+                    "idx": 16,
                     "kind": "code",
                     "text": "c"
                 }

@@ -1,38 +1,55 @@
-export type TWorldKindCode = 'datatype' | 'reserved'
+export type TWorldKind = 'datatype' | 'reserved'
 
-export type TWorldCase = 'lower' | 'upper' | 'origin'
+export type TWorldCase = 'lower' | 'upper'
 
-export type TWorldItem = {
-    kindCode: TWorldKindCode,
+export type TWorld = {
+    kindCode: TWorldKind,
     text: string
 }
 
-export function GetWorld(text: string, textcase: TWorldCase): TWorldItem {
+export type TWorldFilter = {
+    worldKind: TWorldKind,
+    worldCase: TWorldCase | undefined
+}
+
+export type TWorldMap = Map<string, TWorld>
+
+export function GetWorld(mapList: TWorldMap[], text: string): TWorld {
     const len = text.length
     if (len > MAX_LEN_WORLD) return { kindCode: undefined, text: text }
-    const res = world[len].find(f => f.text === text.toLowerCase())
-    if (textcase === 'upper') {
-        if (res) {
-            return { kindCode: res.kindCode, text: res.text.toUpperCase() }
-        } else {
-            return { kindCode: undefined, text: text.toUpperCase() }
-        }
-    }
-    if (textcase === 'lower') {
-        if (res) {
-            return { kindCode: res.kindCode, text: res.text.toLowerCase() }
-        } else {
-            return { kindCode: undefined, text: text.toLowerCase() }
-        }
-    }
-    if (res) {
-        return { kindCode: res.kindCode, text: text }
-    } else {
+    const res = mapList[len].get(text.toLowerCase())
+    if (!res) {
         return { kindCode: undefined, text: text }
     }
+    return { kindCode: res.kindCode, text: res.text || text}
 }
 
 const MAX_LEN_WORLD = 30
+
+export function GetWorldMapList(filter: TWorldFilter[]): TWorldMap[] {
+    const res = [] as TWorldMap[]
+    world.forEach(w => {
+        const m = new Map<string, TWorld>() as TWorldMap
+        filter.forEach(fi => {
+            w.filter(f => f.kindCode === fi.worldKind).forEach(l => {
+                if (fi.worldCase === 'upper') {
+                    m.set(l.text, {kindCode: l.kindCode, text: l.text.toUpperCase()})
+                } else if (fi.worldCase === 'lower') {
+                    m.set(l.text, {kindCode: l.kindCode, text: l.text.toLowerCase()})
+                } else {
+                    m.set(l.text, {kindCode: l.kindCode, text: undefined})
+                }
+            })
+        })
+        res.push(m)
+    })
+    return res
+}
+
+export const kindCodeList = [
+    'datatype',
+    'reserved'
+] as TWorldKind[]
 
 const world = [
     //0
@@ -357,5 +374,5 @@ const world = [
     [
         { kindCode: 'reserved', text: 'semanticsimilaritydetailstable' },
     ],
-] as TWorldItem[][]
+] as TWorld[][]
 

@@ -1,7 +1,7 @@
 {
     "name": "mssqlrefine",
-    "version": "0.0.8",
-    "description": "Сlearing mssql text from comments and string variables",
+    "version": "0.0.9",
+    "description": "Build tokens by mssql query text",
     "main": "dist/src/index.js",
     "scripts": {
         "test": "node ./dist/test/index.js",

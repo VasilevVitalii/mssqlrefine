@@ -1,30 +1,15 @@
 import os from 'os'
 import fs from 'fs'
 import path from "path";
-import { Parse } from "../src/tokenizator";
+import { CreateRefineService } from "../src";
 import * as mssqldriver from 'mssqldriver'
-import { exit } from 'process';
 
-//const a = Parse(["select a, b, c","from ddd"])
-//console.log(JSON.stringify(a, null, '\t'))
-
-// const dictionary = new Map<string, string>()
-// dictionary.set('bit', 'datatype')
-// dictionary.set('int', 'datatype')
-// dictionary.set('xml', 'datatype')
-// dictionary.set('add', 'reserved')
-// let a = dictionary.get('xml')
-// let b = dictionary.get('aaa')
-
-// { kindCode: 'datatype', text: 'bit' },
-// { kindCode: 'datatype', text: 'int' },
-// { kindCode: 'datatype', text: 'xml' },
-// { kindCode: 'reserved', text: 'add' },
-
-const onlyFiles = [
-]
+const onlyFiles = []
 const pathtest = path.join(__dirname, '..', '..', 'test')
 const pathtestcases = path.join(pathtest, 'testcases')
+
+const refineService = CreateRefineService()
+refineService.prepareWorldsAll()
 
 fs.readdir(pathtestcases, (err, files) => {
     if (err) {
@@ -41,7 +26,7 @@ fs.readdir(pathtestcases, (err, files) => {
             const t = JSON.parse(fs.readFileSync(path.join(pathtestcases, file), 'utf8'))
             const tJsonRes = JSON.stringify(t.result, null, '\t')
             const test = t.test as string[]
-            const p = Parse(test)
+            const p = refineService.getTokens(test)
             const pJsonRes = JSON.stringify(p, null, '\t')
 
             if (test.length !== p.length) {
@@ -134,7 +119,7 @@ mssql.exec([
         const rows = callbackExec.finish.tables[0].rows
         rows.forEach(row=>{
             const t = row.text.replaceAll('&\n','\n').split('\n')
-            const p = Parse (t)
+            const p = refineService.getTokens(t)
             if (t.length !== p.length) {
                 console.error(`error test (length) from sql [${row.type.trim()}] ${row.schema}.${row.name} - in server=${t.length}, in parse=${p.length}`)
                 return
