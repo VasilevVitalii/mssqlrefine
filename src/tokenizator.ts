@@ -22,7 +22,7 @@ export const operator = ['+', '-', '%', '=', '<', '>', '!', '(', ')', '/', '*']
 
 const space = new RegExp(/[\u00A0\s]/, 'gi')
 
-export function Parse(text: string[], worldList: TWorldMap[], startAt: {kind: TTokenKind, deep?: number} | undefined = undefined): TTokenLine[] {
+export function Parse(text: string[], worldList: TWorldMap[], startAt: {kind: TTokenKind, deep?: number | undefined} | undefined = undefined): TTokenLine[] {
     const result = [] as TTokenLine[]
 
     let buffKind = startAt ? startAt.kind : undefined as TTokenKind
