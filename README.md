@@ -8,7 +8,7 @@ npm i mssqltask
 ```
 ## Example
 ```javascript
-import { CreateRefineService } as mssqlrefine from 'mssqlrefine'
+import { CreateRefineService } from 'mssqlrefine'
 
 const refineService = CreateRefineService()
 refineService.prepareWorldsAll('upper')
