@@ -112,6 +112,7 @@
                 },
                 {
                     "idx": 9,
+                    "deep": 1,
                     "kind": "comment-multi",
                     "text": "/*v"
                 }

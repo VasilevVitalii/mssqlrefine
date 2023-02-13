@@ -8,6 +8,7 @@
             "chunks": [
                 {
                     "idx": 0,
+                    "deep": 1,
                     "kind": "comment-multi",
                     "text": "/* pri/*n*/t h--ello "
                 }

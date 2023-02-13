@@ -13,6 +13,7 @@
                 },
                 {
                     "idx": 1,
+                    "deep": 1,
                     "kind": "comment-multi",
                     "text": "/*c"
                 }

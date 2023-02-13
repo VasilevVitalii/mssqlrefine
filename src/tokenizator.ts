@@ -12,7 +12,7 @@ export type TTokenKind =
     'operator' |
     'point'
 
-export type TTokenLineChunk = { idx: number, kind: TTokenKind } & TWorldKinds
+export type TTokenLineChunk = { idx: number, deep?: number, kind: TTokenKind } & TWorldKinds
 
 export type TTokenLine = {
     chunks: TTokenLineChunk[]
@@ -174,7 +174,7 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt: {kind: TT
             if (buffKind === 'code') {
                 line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx)) })
             } else {
-                line.chunks.push({ idx: buffStartIdx, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx) })
+                line.chunks.push({ idx: buffStartIdx, deep: deep, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx) })
             }
         }
 
