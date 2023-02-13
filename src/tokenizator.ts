@@ -26,7 +26,7 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt: {kind: TT
     const result = [] as TTokenLine[]
 
     let buffKind = startAt ? startAt.kind : undefined as TTokenKind
-    let deep = startAt ? startAt.deep : 0 as number
+    let deep = startAt ? (startAt.deep || 0) : 0 as number
 
     text.forEach(lineText => {
         const line = { chunks: [] } as TTokenLine
