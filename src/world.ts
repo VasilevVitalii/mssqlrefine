@@ -36,7 +36,7 @@ export type TWorld = {
 }
 
 export type TWorldKinds = {
-    kindCode: TWorldKind[],
+    kindCode?: TWorldKind[],
     text: string
 }
 
