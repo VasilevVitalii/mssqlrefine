@@ -25,6 +25,16 @@ const space = new RegExp(/[\u00A0\s]/, 'gi')
 export function Parse(text: string[], worldList: TWorldMap[], startAt: {kind: TTokenKind, deep?: number | undefined} | undefined = undefined): TTokenLine[] {
     const result = [] as TTokenLine[]
 
+    if (startAt) {
+        if (!(
+            (startAt.kind === 'code-in-bracket') ||
+            (startAt.kind === 'comment-multi' && startAt.deep > 0) ||
+            (startAt.kind === 'string' && startAt.deep > 0)
+        )) {
+            startAt = undefined
+        }
+    }
+
     let buffKind = startAt ? startAt.kind : undefined as TTokenKind
     let deep = startAt ? (startAt.deep || 0) : 0 as number
 
