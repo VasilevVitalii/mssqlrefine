@@ -1,0 +1,96 @@
+{
+	"test": [
+		"DECLARE @b VARCHAR(MAX)",
+        "SET @b='hi'"
+	],
+	"result": [
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "code",
+                    "kindCode": [
+                        "lang",
+                        "reserved"
+                    ],
+                    "text": "DECLARE"
+                },
+                {
+                    "idx": 7,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 8,
+                    "kind": "code",
+                    "text": "@b"
+                },
+                {
+                    "idx": 10,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 11,
+                    "kind": "code",
+                    "kindCode": [
+                        "datatype"
+                    ],
+                    "text": "VARCHAR"
+                },
+                {
+                    "idx": 18,
+                    "kind": "operator",
+                    "text": "("
+                },
+                {
+                    "idx": 19,
+                    "kind": "code",
+                    "kindCode": [
+                        "function-aggregate"
+                    ],
+                    "text": "MAX"
+                },
+                {
+                    "idx": 22,
+                    "kind": "operator",
+                    "text": ")"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "code",
+                    "kindCode": [
+                        "statement",
+                        "lang",
+                        "reserved"
+                    ],
+                    "text": "SET"
+                },
+                {
+                    "idx": 3,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 4,
+                    "kind": "code",
+                    "text": "@b"
+                },
+                {
+                    "idx": 6,
+                    "kind": "operator",
+                    "text": "="
+                },
+                {
+                    "idx": 7,
+                    "kind": "string",
+                    "text": "'hi'"
+                }
+            ]
+        }
+    ]
+}

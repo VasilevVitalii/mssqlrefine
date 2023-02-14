@@ -1,6 +1,6 @@
 {
     "name": "mssqlrefine",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "description": "Build tokens by mssql query text",
     "main": "dist/src/index.js",
     "scripts": {
