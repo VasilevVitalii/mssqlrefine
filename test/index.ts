@@ -58,7 +58,7 @@ fs.readdir(pathtestcases, (err, files) => {
             const pJsonRes = JSON.stringify(p, null, '\t')
 
             if (test.length !== p.length) {
-                console.error(`error test (length) from file ${file} - in text=${test.length}, in parse=${p.length}`)
+                console.error(`StartAt OFF: error test (length) from file ${file} - in text=${test.length}, in parse=${p.length}`)
                 return
             }
 
@@ -66,7 +66,7 @@ fs.readdir(pathtestcases, (err, files) => {
                 const ttt = test[i]
                 const ppp = p[i].chunks.map(m => m.text).join('')
                 if (ttt !== ppp) {
-                    console.error(`error test (text) from file ${file} in line ${i}`)
+                    console.error(`StartAt OFF: error test (text) from file ${file} in line ${i}`)
                     console.error(`need:   ${ttt}`)
                     console.error(`result: ${ppp}`)
                     return
@@ -74,7 +74,7 @@ fs.readdir(pathtestcases, (err, files) => {
             }
 
             if (tJsonRes.toLowerCase() !== pJsonRes.toLowerCase()) {
-                console.error(`error test (json) from file ${file}`)
+                console.error(`StartAt OFF: error test (json) from file ${file}`)
                 console.log('========NEED==============================')
                 console.log(tJsonRes)
                 console.log('========RESULT============================')
@@ -84,7 +84,43 @@ fs.readdir(pathtestcases, (err, files) => {
                 return
             }
 
+            if (p.length <= 1) {
+                console.log(`success test from file ${file}`)
+                return
+            }
+
+            const p1 = [p[0], ...refineService.getTokens(test.slice(1), p.slice(0,1))]
+            const p1JsonRes = JSON.stringify(p1, null, '\t')
+
+            if (test.length !== p1.length) {
+                console.error(`StartAt ON: error test (length) from file ${file} - in text=${test.length}, in parse=${p1.length}`)
+                return
+            }
+
+            for (let i = 0; i < test.length; i++) {
+                const ttt = test[i]
+                const ppp = p1[i].chunks.map(m => m.text).join('')
+                if (ttt !== ppp) {
+                    console.error(`StartAt ON: error test (text) from file ${file} in line ${i}`)
+                    console.error(`need:   ${ttt}`)
+                    console.error(`result: ${ppp}`)
+                    return
+                }
+            }
+
+            if (tJsonRes.toLowerCase() !== p1JsonRes.toLowerCase()) {
+                console.error(`StartAt ON: error test (json) from file ${file}`)
+                console.log('========NEED==============================')
+                console.log(tJsonRes)
+                console.log('========RESULT============================')
+                console.log(p1JsonRes)
+                console.log('========END===============================')
+                console.log('')
+                return
+            }
+
             console.log(`success test from file ${file}`)
+
         } catch (err) {
             console.error(err)
         }

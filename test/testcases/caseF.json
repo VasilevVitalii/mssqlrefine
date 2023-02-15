@@ -1,0 +1,56 @@
+{
+	"test": [
+		"a '  b''",
+        "",
+        " c  ' d"
+	],
+	"result": [
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "code",
+                    "text": "a"
+                },
+                {
+                    "idx": 1,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 2,
+                    "kind": "string",
+                    "text": "'  b''"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "string",
+                    "text": ""
+                }
+            ]
+        },        
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "string",
+                    "text": " c  '"
+                },
+                {
+                    "idx": 5,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 6,
+                    "kind": "code",
+                    "text": "d"
+                }
+            ]
+        }
+    ]
+}

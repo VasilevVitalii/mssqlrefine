@@ -22,21 +22,33 @@ export const operator = ['+', '-', '%', '=', '<', '>', '!', '(', ')', '/', '*']
 
 const space = new RegExp(/[\u00A0\s]/, 'gi')
 
-export function Parse(text: string[], worldList: TWorldMap[], startAt: {kind: TTokenKind, deep?: number | undefined} | undefined = undefined): TTokenLine[] {
+export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLine[] | TTokenLineChunk | undefined): TTokenLine[] {
     const result = [] as TTokenLine[]
 
-    if (startAt) {
-        if (!(
-            (startAt.kind === 'code-in-bracket') ||
-            (startAt.kind === 'comment-multi' && startAt.deep > 0) ||
-            (startAt.kind === 'string' && startAt.deep > 0)
-        )) {
-            startAt = undefined
+    let startChunk = startAt ? (Array.isArray(startAt) ? getLastChunk(startAt) : startAt) : undefined
+
+    if (startChunk) {
+        if (startChunk.kind === 'code-in-bracket') {
+            if (startChunk.text.length > 0 && startChunk.text[startChunk.text.length - 1] === ']') {
+                startChunk = undefined
+            }
+        } else if (startChunk.kind === 'comment-multi') {
+            if (!startChunk.deep && startChunk.text.length > 1 && startChunk.text.slice(startChunk.text.length - 2) === '*/') {
+                startChunk = undefined
+            }
+        } else if (startChunk.kind === 'string') {
+            if (startChunk.text.length > 0 && startChunk.text[startChunk.text.length - 1] === '\''
+            && !(startChunk.text.length > 1 && startChunk.text[startChunk.text.length - 2] === '\'')
+            ) {
+                startChunk = undefined
+            }
+        } else {
+            startChunk = undefined
         }
     }
 
-    let buffKind = startAt ? startAt.kind : undefined as TTokenKind
-    let deep = startAt ? (startAt.deep || 0) : 0 as number
+    let buffKind = startChunk ? startChunk.kind : undefined as TTokenKind
+    let deep = startChunk ? (startChunk.deep || 0) : 0 as number
 
     text.forEach(lineText => {
         const line = { chunks: [] } as TTokenLine
@@ -184,7 +196,7 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt: {kind: TT
             if (buffKind === 'code') {
                 line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx)) })
             } else {
-                line.chunks.push({ idx: buffStartIdx, deep: deep, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx) })
+                line.chunks.push({ idx: buffStartIdx, deep: deep > 0 ? deep : undefined, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx) })
             }
         }
 
@@ -214,4 +226,13 @@ function getKindStart(ch: string, chidx: number, lineText: string): TTokenKind {
         if (ch === '/' && nech === '*') return 'comment-multi'
     }
     return 'code'
+}
+
+function getLastChunk(tokens: TTokenLine[]): TTokenLineChunk {
+    if (!tokens) return undefined
+    for (let i = tokens.length - 1; i >= 0; i--) {
+        const line = tokens[i]
+        if (line.chunks.length > 0) return line.chunks[line.chunks.length - 1]
+    }
+    return undefined
 }

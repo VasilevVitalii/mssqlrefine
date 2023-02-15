@@ -1,0 +1,47 @@
+{
+	"test": [
+		"a /* /* b",
+        " c */ */ d"
+	],
+	"result": [
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "code",
+                    "text": "a"
+                },
+                {
+                    "idx": 1,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 2,
+                    "deep": 2,
+                    "kind": "comment-multi",
+                    "text": "/* /* b"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "comment-multi",
+                    "text": " c */ */"
+                },
+                {
+                    "idx": 8,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 9,
+                    "kind": "code",
+                    "text": "d"
+                }
+            ]
+        }
+    ]
+}
