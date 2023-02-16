@@ -134,6 +134,7 @@ export const world = [
         { kindCode: 'lang', text: 'if'},
         { kindCode: 'lang', text: 'in'},
         { kindCode: 'lang', text: 'or'},
+        { kindCode: 'reserved', text: 'go' },
         { kindCode: 'reserved', text: 'as' },
         { kindCode: 'reserved', text: 'by' },
         { kindCode: 'reserved', text: 'if' },

@@ -12,11 +12,22 @@ import { CreateRefineService } from 'mssqlrefine'
 
 const refineService = CreateRefineService()
 refineService.prepareWorldsAll('upper')
-const tokens = refineService.getTokens([
+
+//build tokens in one iteration
+const tokens1 = refineService.getTokens([
     `select a, /*comment*/, [b]+[c], 'string' as d`,
     `from mytable order by a --comment`
 ])
-console.log(tokens)
+
+//build tokens in two iterations
+const tokens2 = refineService.getTokens([
+    `select a, /*comment*/, [b]+[c], 'string' as d`
+])
+tokens2.push(...refineService.getTokens([`from mytable order by a --comment`], tokens2))
+
+//tokens1 and tokens2 are equal
+console.log(tokens1)
+console.log(tokens2)
 ```
 ```json
 [
@@ -54,6 +65,7 @@ console.log(tokens)
 			},
 			{
 				"idx": 10,
+				"deepImpartible": 0,
 				"kind": "comment-multi",
 				"text": "/*comment*/"
 			},
@@ -69,6 +81,7 @@ console.log(tokens)
 			},
 			{
 				"idx": 23,
+				"deepImpartible": 0,
 				"kind": "code-in-bracket",
 				"text": "[b]"
 			},
@@ -79,6 +92,7 @@ console.log(tokens)
 			},
 			{
 				"idx": 27,
+				"deepImpartible": 0,
 				"kind": "code-in-bracket",
 				"text": "[c]"
 			},
@@ -94,6 +108,7 @@ console.log(tokens)
 			},
 			{
 				"idx": 32,
+				"deepImpartible": 0,
 				"kind": "string",
 				"text": "'string'"
 			},
@@ -188,7 +203,7 @@ console.log(tokens)
 				"text": " "
 			},
 			{
-				"idx": 25,
+				"idx": 24,
 				"kind": "comment-single",
 				"text": "--comment"
 			}

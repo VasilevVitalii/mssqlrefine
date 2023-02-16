@@ -5,12 +5,21 @@ import { CreateRefineService } from "../src";
 import * as mssqldriver from 'mssqldriver'
 import { world } from '../src/world'
 
+
 const onlyFiles = []
 const pathtest = path.join(__dirname, '..', '..', 'test')
 const pathtestcases = path.join(pathtest, 'testcases')
 
 const refineService = CreateRefineService()
 refineService.prepareWorldsAll()
+
+const refineServiceExample = CreateRefineService()
+refineServiceExample.prepareWorldsAll('upper')
+const tokensExample = refineServiceExample.getTokens([
+    `select a, /*comment*/, [b]+[c], 'string' as d`,
+    `from mytable order by a --comment`
+])
+fs.writeFileSync(path.join(pathtest, 'example.json'), JSON.stringify(tokensExample, null, '\t'), 'utf8')
 
 let hasWordError = false
 
