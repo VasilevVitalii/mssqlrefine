@@ -13,7 +13,7 @@ Building tokens based on the mssql query text
 *MIT*
 ## Install
 ```
-npm i mssqltask
+npm i mssqlrefine
 ```
 ## Example
 ```javascript
