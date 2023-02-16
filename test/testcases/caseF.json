@@ -19,6 +19,7 @@
                 },
                 {
                     "idx": 2,
+                    "deepImpartible": 1,
                     "kind": "string",
                     "text": "'  b''"
                 }
@@ -28,15 +29,17 @@
             "chunks": [
                 {
                     "idx": 0,
+                    "deepImpartible": 1,
                     "kind": "string",
                     "text": ""
                 }
             ]
-        },        
+        },
         {
             "chunks": [
                 {
                     "idx": 0,
+                    "deepImpartible": 0,
                     "kind": "string",
                     "text": " c  '"
                 },

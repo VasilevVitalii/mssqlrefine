@@ -87,6 +87,7 @@
                 },
                 {
                     "idx": 7,
+                    "deepImpartible": 0,
                     "kind": "string",
                     "text": "'hi'"
                 }

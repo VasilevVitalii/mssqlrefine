@@ -12,7 +12,7 @@ export type TTokenKind =
     'operator' |
     'point'
 
-export type TTokenLineChunk = { idx: number, deep?: number, kind: TTokenKind } & TWorldKinds
+export type TTokenLineChunk = { idx: number, deepImpartible?: number, kind: TTokenKind } & TWorldKinds
 
 export type TTokenLine = {
     chunks: TTokenLineChunk[]
@@ -28,18 +28,8 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
     let startChunk = startAt ? (Array.isArray(startAt) ? getLastChunk(startAt) : startAt) : undefined
 
     if (startChunk) {
-        if (startChunk.kind === 'code-in-bracket') {
-            if (startChunk.text.length > 0 && startChunk.text[startChunk.text.length - 1] === ']') {
-                startChunk = undefined
-            }
-        } else if (startChunk.kind === 'comment-multi') {
-            if (!startChunk.deep && startChunk.text.length > 1 && startChunk.text.slice(startChunk.text.length - 2) === '*/') {
-                startChunk = undefined
-            }
-        } else if (startChunk.kind === 'string') {
-            if (startChunk.text.length > 0 && startChunk.text[startChunk.text.length - 1] === '\''
-            && !(startChunk.text.length > 1 && startChunk.text[startChunk.text.length - 2] === '\'')
-            ) {
+        if (startChunk.kind === 'code-in-bracket' || startChunk.kind === 'comment-multi' || startChunk.kind === 'string') {
+            if (startChunk.deepImpartible <= 0) {
                 startChunk = undefined
             }
         } else {
@@ -48,7 +38,7 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
     }
 
     let buffKind = startChunk ? startChunk.kind : undefined as TTokenKind
-    let deep = startChunk ? (startChunk.deep || 0) : 0 as number
+    let deepImpartible = startChunk ? (startChunk.deepImpartible || 0) : 0 as number
 
     text.forEach(lineText => {
         const line = { chunks: [] } as TTokenLine
@@ -59,6 +49,7 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
             const ch = lineText[chidx]
 
             if (!buffKind) {
+                deepImpartible = 0
                 buffKind = getKindStart(ch, chidx, lineText)
                 if (buffKind === 'comma' || buffKind === 'semicolon' || buffKind === 'operator' || buffKind === 'point') {
                     line.chunks.push({ idx: chidx, kind: buffKind, kindCode: undefined, text: ch })
@@ -71,7 +62,15 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
                 } else if (buffKind === 'comment-multi') {
                     buffStartIdx = chidx
                     chidx++
-                    deep = 1
+                    deepImpartible = 1
+                    continue
+                } else if (buffKind === 'string') {
+                    buffStartIdx = chidx
+                    deepImpartible = 1
+                    continue
+                } else if (buffKind === 'code-in-bracket') {
+                    buffStartIdx = chidx
+                    deepImpartible = 1
                     continue
                 } else {
                     buffStartIdx = chidx
@@ -92,7 +91,8 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
                 if (ch === '\'') {
                     const nech = getNech(chidx, lineText)
                     if (nech !== '\'') {
-                        line.chunks.push({ idx: buffStartIdx, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 1) })
+                        deepImpartible--
+                        line.chunks.push({ idx: buffStartIdx, deepImpartible: deepImpartible, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 1) })
                         buffKind = null
                     } else {
                         chidx++
@@ -103,7 +103,8 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
 
             if (buffKind === 'code-in-bracket') {
                 if (ch === ']') {
-                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 1) })
+                    deepImpartible--
+                    line.chunks.push({ idx: buffStartIdx, deepImpartible: deepImpartible, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 1) })
                     buffKind = null
                 }
                 continue
@@ -113,9 +114,9 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
                 if (ch === '*') {
                     const nech = getNech(chidx, lineText)
                     if (nech === '/') {
-                        deep--
-                        if (deep <= 0) {
-                            line.chunks.push({ idx: buffStartIdx, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 2) })
+                        deepImpartible--
+                        if (deepImpartible <= 0) {
+                            line.chunks.push({ idx: buffStartIdx, deepImpartible: deepImpartible, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 2) })
                             buffKind = null
                         }
                         chidx++
@@ -124,7 +125,7 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
                 if (ch === '/') {
                     const nech = getNech(chidx, lineText)
                     if (nech === '*') {
-                        deep++
+                        deepImpartible++
                     }
                     chidx++
                 }
@@ -163,6 +164,7 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
 
             if (ch === '\'') {
                 line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
+                deepImpartible = 1
                 buffKind = 'string'
                 buffStartIdx = chidx
                 continue
@@ -170,6 +172,7 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
 
             if (ch === '[') {
                 line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
+                deepImpartible = 1
                 buffKind = 'code-in-bracket'
                 buffStartIdx = chidx
                 continue
@@ -179,7 +182,7 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
                 const nech = getNech(chidx, lineText)
                 if (nech === '*') {
                     line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
-                    deep = 1
+                    deepImpartible = 1
                     buffKind = 'comment-multi'
                     buffStartIdx = chidx
                     chidx++
@@ -196,7 +199,13 @@ export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLi
             if (buffKind === 'code') {
                 line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx)) })
             } else {
-                line.chunks.push({ idx: buffStartIdx, deep: deep > 0 ? deep : undefined, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx) })
+                line.chunks.push({
+                    idx: buffStartIdx,
+                    deepImpartible: buffKind === 'comment-multi' || buffKind === 'code-in-bracket' || buffKind === 'string' ? deepImpartible : undefined,
+                    kind: buffKind,
+                    kindCode: undefined,
+                    text: lineText.substring(buffStartIdx)
+                })
             }
         }
 

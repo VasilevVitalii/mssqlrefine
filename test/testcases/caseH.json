@@ -1,0 +1,92 @@
+{
+	"test": [
+		"SET @SQL = 'SELECT a AS [b",
+        "c] FROM table'; EXEC @SQL"
+	],
+	"result": [
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "code",
+                    "kindCode": [
+                        "statement",
+                        "lang",
+                        "reserved"
+                    ],
+                    "text": "SET"
+                },
+                {
+                    "idx": 3,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 4,
+                    "kind": "code",
+                    "text": "@SQL"
+                },
+                {
+                    "idx": 8,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 9,
+                    "kind": "operator",
+                    "text": "="
+                },
+                {
+                    "idx": 10,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 11,
+                    "deepImpartible": 1,
+                    "kind": "string",
+                    "text": "'SELECT a AS [b"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "deepImpartible": 0,
+                    "kind": "string",
+                    "text": "c] FROM table'"
+                },
+                {
+                    "idx": 14,
+                    "kind": "semicolon",
+                    "text": ";"
+                },
+                {
+                    "idx": 15,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 16,
+                    "kind": "code",
+                    "kindCode": [
+                        "lang",
+                        "reserved"
+                    ],
+                    "text": "EXEC"
+                },
+                {
+                    "idx": 20,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 21,
+                    "kind": "code",
+                    "text": "@SQL"
+                }
+            ]
+        }
+    ]
+}

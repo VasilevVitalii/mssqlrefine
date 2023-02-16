@@ -19,7 +19,7 @@
                 },
                 {
                     "idx": 2,
-                    "deep": 2,
+                    "deepImpartible": 2,
                     "kind": "comment-multi",
                     "text": "/* /* b"
                 }
@@ -29,7 +29,7 @@
             "chunks": [
                 {
                     "idx": 0,
-                    "deep": 2,
+                    "deepImpartible": 2,
                     "kind": "comment-multi",
                     "text": ""
                 }
@@ -39,6 +39,7 @@
             "chunks": [
                 {
                     "idx": 0,
+                    "deepImpartible": 0,
                     "kind": "comment-multi",
                     "text": " c */ */"
                 },

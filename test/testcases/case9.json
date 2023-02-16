@@ -24,6 +24,7 @@
                 },
                 {
                     "idx": 7,
+                    "deepImpartible": 0,
                     "kind": "string",
                     "text": "'ta'"
                 },
@@ -44,6 +45,7 @@
                 },
                 {
                     "idx": 15,
+                    "deepImpartible": 0,
                     "kind": "comment-multi",
                     "text": "/*ss*/"
                 },
@@ -59,6 +61,7 @@
                 },
                 {
                     "idx": 23,
+                    "deepImpartible": 0,
                     "kind": "string",
                     "text": "'tb'"
                 },
@@ -69,6 +72,7 @@
                 },
                 {
                     "idx": 28,
+                    "deepImpartible": 0,
                     "kind": "code-in-bracket",
                     "text": "[fb bf]"
                 },
@@ -112,7 +116,7 @@
                 },
                 {
                     "idx": 9,
-                    "deep": 1,
+                    "deepImpartible": 1,
                     "kind": "comment-multi",
                     "text": "/*v"
                 }
@@ -122,6 +126,7 @@
             "chunks": [
                 {
                     "idx": 0,
+                    "deepImpartible": 0,
                     "kind": "comment-multi",
                     "text": "z/**/*/"
                 },

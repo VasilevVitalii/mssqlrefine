@@ -1,0 +1,95 @@
+{
+	"test": [
+		"SELECT a AS [[a",
+        "b] FROM table" 
+	],
+	"result": [
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "code",
+                    "kindCode": [
+                        "statement",
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "SELECT"
+                },
+                {
+                    "idx": 6,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 7,
+                    "kind": "code",
+                    "text": "a"
+                },
+                {
+                    "idx": 8,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 9,
+                    "kind": "code",
+                    "kindCode": [
+                        "statement",
+                        "reserved"
+                    ],
+                    "text": "AS"
+                },
+                {
+                    "idx": 11,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 12,
+                    "deepImpartible": 1,
+                    "kind": "code-in-bracket",
+                    "text": "[[a"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "deepImpartible": 0,
+                    "kind": "code-in-bracket",
+                    "text": "b]"
+                },
+                {
+                    "idx": 2,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 3,
+                    "kind": "code",
+                    "kindCode": [
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "FROM"
+                },
+                {
+                    "idx": 7,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 8,
+                    "kind": "code",
+                    "kindCode": [
+                        "statement",
+                        "reserved"
+                    ],
+                    "text": "table"
+                }
+            ]
+        }
+    ]
+}
