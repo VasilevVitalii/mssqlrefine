@@ -23,7 +23,7 @@ fs.writeFileSync(path.join(pathtest, 'example.json'), JSON.stringify(tokensExamp
 
 let hasWordError = false
 
-world.forEach((w,i) => {
+world.forEach((w, i) => {
     w.forEach((p, ii) => {
         if (p.text.length !== i) {
             console.error(`in world list in array ${i} present world "${p.text}" with len ${p.text.length}`)
@@ -98,7 +98,7 @@ fs.readdir(pathtestcases, (err, files) => {
                 return
             }
 
-            const p1 = [p[0], ...refineService.getTokens(test.slice(1), p.slice(0,1))]
+            const p1 = [p[0], ...refineService.getTokens(test.slice(1), { startAt: p.slice(0, 1) })]
             const p1JsonRes = JSON.stringify(p1, null, '\t')
 
             if (test.length !== p1.length) {
@@ -183,15 +183,15 @@ mssql.exec([
     `    GROUP BY s.[name], o.[name], o.[type], o.object_id`,
     `) q`,
     `ORDER BY [schema], [name], [type], [text]`,
-].join(os.EOL) , undefined, callbackExec => {
+].join(os.EOL), undefined, callbackExec => {
     if (callbackExec.kind === 'finish') {
         if (callbackExec.finish.error) {
             console.error(callbackExec.finish.error.message)
             return
         }
         const rows = callbackExec.finish.tables[0].rows
-        rows.forEach(row=>{
-            const t = row.text.replaceAll('&\n','\n').split('\n')
+        rows.forEach(row => {
+            const t = row.text.replaceAll('&\n', '\n').split('\n')
             const p = refineService.getTokens(t)
             if (t.length !== p.length) {
                 console.error(`error test (length) from sql [${row.type.trim()}] ${row.schema}.${row.name} - in server=${t.length}, in parse=${p.length}`)

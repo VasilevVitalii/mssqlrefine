@@ -1,10 +1,10 @@
-import { Parse, TTokenLine, TTokenLineChunk } from "./tokenizator";
+import { Parse, TTokenLine, TParseOption } from "./tokenizator";
 import { GetWorldMapList, TWorldCase, kindCodeList, TWorldMap, TWorldFilter } from "./world";
 
 export interface IApp {
-    prepareWorldsAll(worldCase?: TWorldCase)
-    prepareWorldsCustom(filter: TWorldFilter[])
-    getTokens(text: string[], sstartAt?: TTokenLine[] | TTokenLineChunk | undefined): TTokenLine[]
+    prepareWorldsAll(worldCase?: TWorldCase): any
+    prepareWorldsCustom(filter: TWorldFilter[]): any
+    getTokens(text: string[], option?: TParseOption): TTokenLine[]
 }
 
 export class App implements IApp {
@@ -19,7 +19,7 @@ export class App implements IApp {
         this._worlds = GetWorldMapList(filter)
     }
 
-    public getTokens(text: string[], startAt?: TTokenLine[] | TTokenLineChunk | undefined): TTokenLine[] {
-        return Parse(text, this._worlds, startAt)
+    public getTokens(text: string[], option?: TParseOption): TTokenLine[] {
+        return Parse(text, this._worlds, option)
     }
 }

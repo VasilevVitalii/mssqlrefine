@@ -18,14 +18,18 @@ export type TTokenLine = {
     chunks: TTokenLineChunk[]
 }
 
+export type TParseOption = {
+    startAt?: TTokenLine[] | TTokenLineChunk | undefined
+}
+
 export const operator = ['+', '-', '%', '=', '<', '>', '!', '(', ')', '/', '*']
 
 const space = new RegExp(/[\u00A0\s]/, 'gi')
 
-export function Parse(text: string[], worldList: TWorldMap[], startAt?: TTokenLine[] | TTokenLineChunk | undefined): TTokenLine[] {
+export function Parse(text: string[], worldList: TWorldMap[], option?: TParseOption): TTokenLine[] {
     const result = [] as TTokenLine[]
 
-    let startChunk = startAt ? (Array.isArray(startAt) ? getLastChunk(startAt) : startAt) : undefined
+    let startChunk = option?.startAt ? (Array.isArray(option.startAt) ? getLastChunk(option.startAt) : option.startAt) : undefined
 
     if (startChunk) {
         if (startChunk.kind === 'code-in-bracket' || startChunk.kind === 'comment-multi' || startChunk.kind === 'string') {
