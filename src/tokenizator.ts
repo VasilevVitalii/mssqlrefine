@@ -12,36 +12,46 @@ export type TTokenKind =
     'operator' |
     'point'
 
-export type TTokenLineChunk = { idx: number, deepImpartible?: number, kind: TTokenKind } & TWorldKinds
+export type TTokenLineChunk = {
+    idx: number,
+    deepCode?: number,
+    deepImpartible?: number,
+    kind: TTokenKind
+} & TWorldKinds
 
 export type TTokenLine = {
     chunks: TTokenLineChunk[]
 }
 
 export type TParseOption = {
-    startAt?: TTokenLine[] | TTokenLineChunk | undefined
+    startAt?: TTokenLine[] | TTokenLineChunk | undefined,
+    checkRelation?: boolean | undefined
 }
 
 export const operator = ['+', '-', '%', '=', '<', '>', '!', '(', ')', '/', '*']
 
 const space = new RegExp(/[\u00A0\s]/, 'gi')
 
-export function Parse(text: string[], worldList: TWorldMap[], option?: TParseOption): TTokenLine[] {
+export function Get(text: string[], worldList: TWorldMap[], option?: TParseOption): TTokenLine[] {
     const result = [] as TTokenLine[]
 
     let startChunk = option?.startAt ? (Array.isArray(option.startAt) ? getLastChunk(option.startAt) : option.startAt) : undefined
+    let deepCode = startChunk?.deepCode === undefined ? 0 : startChunk?.deepCode
 
     if (startChunk) {
         if (startChunk.kind === 'code-in-bracket' || startChunk.kind === 'comment-multi' || startChunk.kind === 'string') {
             if (startChunk.deepImpartible <= 0) {
                 startChunk = undefined
             }
+        } else if (startChunk.kind === 'operator' && startChunk.text === ')') {
+            deepCode--
+            startChunk = undefined
         } else {
             startChunk = undefined
         }
     }
 
-    let buffKind = startChunk ? startChunk.kind : undefined as TTokenKind
+    let kind = startChunk ? startChunk.kind : undefined as TTokenKind
     let deepImpartible = startChunk ? (startChunk.deepImpartible || 0) : 0 as number
 
     text.forEach(lineText => {
@@ -49,165 +59,189 @@ export function Parse(text: string[], worldList: TWorldMap[], option?: TParseOpt
 
         let buffStartIdx = 0
 
-        for (let chidx = 0; chidx < lineText.length; chidx++) {
-            const ch = lineText[chidx]
+        for (let idx = 0; idx < lineText.length; idx++) {
+            const ch = lineText[idx]
 
-            if (!buffKind) {
+            if (!kind) {
                 deepImpartible = 0
-                buffKind = getKindStart(ch, chidx, lineText)
-                if (buffKind === 'comma' || buffKind === 'semicolon' || buffKind === 'operator' || buffKind === 'point') {
-                    line.chunks.push({ idx: chidx, kind: buffKind, kindCode: undefined, text: ch })
-                    buffKind = undefined
-                    continue
-                } if (buffKind === 'comment-single') {
-                    line.chunks.push({ idx: chidx, kind: buffKind, kindCode: undefined, text: lineText.substring(chidx) })
-                    buffKind = undefined
+                kind = getKindStart(ch, idx, lineText)
+                if (kind === 'comment-single') {
+                    addChunk(line.chunks, { idx, deepCode, kind, text: lineText.substring(idx) })
+                    kind = undefined
                     break
-                } else if (buffKind === 'comment-multi') {
-                    buffStartIdx = chidx
-                    chidx++
+                }
+
+                if (kind === 'comma' || kind === 'semicolon' || kind === 'point') {
+                    addChunk(line.chunks, { idx, deepCode, kind, text: ch })
+                    kind = undefined
+                    continue
+                } else if (kind === 'operator') {
+                    if (ch === '(') {
+                        deepCode++
+                    } else if (ch === ')') {
+                        deepCode--
+                    }
+                    addChunk(line.chunks, { idx, deepCode, kind, text: ch })
+                    kind = undefined
+                    continue
+                } else if (kind === 'comment-multi') {
+                    buffStartIdx = idx
+                    idx++
                     deepImpartible = 1
                     continue
-                } else if (buffKind === 'string') {
-                    buffStartIdx = chidx
+                } else if (kind === 'string') {
+                    buffStartIdx = idx
                     deepImpartible = 1
                     continue
-                } else if (buffKind === 'code-in-bracket') {
-                    buffStartIdx = chidx
+                } else if (kind === 'code-in-bracket') {
+                    buffStartIdx = idx
                     deepImpartible = 1
                     continue
                 } else {
-                    buffStartIdx = chidx
+                    buffStartIdx = idx
                     continue
                 }
             }
 
-            if (buffKind === 'boundary') {
+            if (kind === 'boundary') {
                 if (!(ch === ` ` || space.test(ch))) {
-                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx) })
-                    buffKind = null
-                    chidx--
+                    addChunk(line.chunks, { idx: buffStartIdx, deepCode, kind, text: lineText.substring(buffStartIdx, idx) })
+                    kind = null
+                    idx--
                 }
                 continue
             }
 
-            if (buffKind === 'string') {
+            if (kind === 'string') {
                 if (ch === '\'') {
-                    const nech = getNech(chidx, lineText)
+                    const nech = getNech(idx, lineText)
                     if (nech !== '\'') {
                         deepImpartible--
-                        line.chunks.push({ idx: buffStartIdx, deepImpartible: deepImpartible, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 1) })
-                        buffKind = null
+                        addChunk(line.chunks, { idx: buffStartIdx, deepCode, deepImpartible, kind, text: lineText.substring(buffStartIdx, idx + 1) })
+                        kind = null
                     } else {
-                        chidx++
+                        idx++
                     }
                 }
                 continue
             }
 
-            if (buffKind === 'code-in-bracket') {
+            if (kind === 'code-in-bracket') {
                 if (ch === ']') {
                     deepImpartible--
-                    line.chunks.push({ idx: buffStartIdx, deepImpartible: deepImpartible, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 1) })
-                    buffKind = null
+                    addChunk(line.chunks, { idx: buffStartIdx, deepCode, deepImpartible, kind, text: lineText.substring(buffStartIdx, idx + 1) })
+                    kind = null
                 }
                 continue
             }
 
-            if (buffKind === 'comment-multi') {
+            if (kind === 'comment-multi') {
                 if (ch === '*') {
-                    const nech = getNech(chidx, lineText)
+                    const nech = getNech(idx, lineText)
                     if (nech === '/') {
                         deepImpartible--
                         if (deepImpartible <= 0) {
-                            line.chunks.push({ idx: buffStartIdx, deepImpartible: deepImpartible, kind: buffKind, kindCode: undefined, text: lineText.substring(buffStartIdx, chidx + 2) })
-                            buffKind = null
+                            addChunk(line.chunks, { idx: buffStartIdx, deepCode, deepImpartible, kind, text: lineText.substring(buffStartIdx, idx + 2) })
+                            kind = null
                         }
-                        chidx++
+                        idx++
                     }
                 }
                 if (ch === '/') {
-                    const nech = getNech(chidx, lineText)
+                    const nech = getNech(idx, lineText)
                     if (nech === '*') {
                         deepImpartible++
                     }
-                    chidx++
+                    idx++
                 }
                 continue
             }
 
             //code
             if (ch === ',' || ch === ';' || ch === '.' || (ch !== '-' && ch !== '/' && operator.includes(ch))) {
-                line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
-                line.chunks.push({ idx: chidx, kind: ch === ',' ? 'comma' : ch === ';' ? 'semicolon' : ch === '.' ? 'point' : 'operator', kindCode: undefined, text: ch })
-                buffKind = undefined
+                addChunk(line.chunks, { idx: buffStartIdx, deepCode, kind, ...GetWorld(worldList, lineText.substring(buffStartIdx, idx)) })
+                if (ch === '(') {
+                    deepCode++
+                }
+                addChunk(line.chunks, { idx, deepCode, kind: ch === ',' ? 'comma' : ch === ';' ? 'semicolon' : ch === '.' ? 'point' : 'operator', text: ch })
+                if (ch === ')') {
+                    deepCode--
+                }
+                kind = undefined
                 continue
             }
 
             if (ch === '-') {
-                const nech = getNech(chidx, lineText)
+                const nech = getNech(idx, lineText)
                 if (nech === '-') {
-                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
-                    line.chunks.push({ idx: chidx, kind: buffKind, kindCode: undefined, text: lineText.substring(chidx) })
-                    buffKind = undefined
+                    addChunk(line.chunks, { idx: buffStartIdx, deepCode, kind, ...GetWorld(worldList, lineText.substring(buffStartIdx, idx)) })
+                    addChunk(line.chunks, { idx, deepCode, kind, text: lineText.substring(idx) })
+                    kind = undefined
                     break
                 } else {
-                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
-                    line.chunks.push({ idx: chidx, kind: 'operator', kindCode: undefined, text: ch })
-                    buffKind = undefined
+                    addChunk(line.chunks, { idx: buffStartIdx, deepCode, kind, ...GetWorld(worldList, lineText.substring(buffStartIdx, idx)) })
+                    addChunk(line.chunks, { idx, deepCode, kind: 'operator', text: ch })
+                    kind = undefined
                     continue
                 }
             }
 
             if (ch === ` ` || space.test(ch)) {
-                line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
-                buffKind = 'boundary'
-                buffStartIdx = chidx
+                addChunk(line.chunks, { idx: buffStartIdx, deepCode, kind, ...GetWorld(worldList, lineText.substring(buffStartIdx, idx)) })
+                kind = 'boundary'
+                buffStartIdx = idx
                 continue
             }
 
             if (ch === '\'') {
-                line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
+                addChunk(line.chunks, { idx: buffStartIdx, deepCode, kind, ...GetWorld(worldList, lineText.substring(buffStartIdx, idx)) })
                 deepImpartible = 1
-                buffKind = 'string'
-                buffStartIdx = chidx
+                kind = 'string'
+                buffStartIdx = idx
                 continue
             }
 
             if (ch === '[') {
-                line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
+                addChunk(line.chunks, { idx: buffStartIdx, deepCode, kind, ...GetWorld(worldList, lineText.substring(buffStartIdx, idx)) })
                 deepImpartible = 1
-                buffKind = 'code-in-bracket'
-                buffStartIdx = chidx
+                kind = 'code-in-bracket'
+                buffStartIdx = idx
                 continue
             }
 
             if (ch === '/') {
-                const nech = getNech(chidx, lineText)
+                const nech = getNech(idx, lineText)
                 if (nech === '*') {
-                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
+                    addChunk(line.chunks, { idx: buffStartIdx, deepCode, kind, ...GetWorld(worldList, lineText.substring(buffStartIdx, idx)) })
                     deepImpartible = 1
-                    buffKind = 'comment-multi'
-                    buffStartIdx = chidx
-                    chidx++
+                    kind = 'comment-multi'
+                    buffStartIdx = idx
+                    idx++
                 } else {
-                    line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx, chidx)) })
-                    line.chunks.push({ idx: chidx, kind: 'operator', kindCode: undefined, text: ch })
-                    buffKind = undefined
+                    addChunk(line.chunks, { idx: buffStartIdx, deepCode, kind, ...GetWorld(worldList, lineText.substring(buffStartIdx, idx)) })
+                    addChunk(line.chunks, { idx, deepCode, kind: 'operator', text: ch })
+                    kind = undefined
                 }
                 continue
             }
+
+
         }
 
-        if (buffKind) {
-            if (buffKind === 'code') {
-                line.chunks.push({ idx: buffStartIdx, kind: buffKind, ...GetWorld(worldList, lineText.substring(buffStartIdx)) })
-            } else {
-                line.chunks.push({
+        if (kind) {
+            if (kind === 'code') {
+                addChunk(line.chunks, {
                     idx: buffStartIdx,
-                    deepImpartible: buffKind === 'comment-multi' || buffKind === 'code-in-bracket' || buffKind === 'string' ? deepImpartible : undefined,
-                    kind: buffKind,
-                    kindCode: undefined,
+                    deepCode,
+                    kind,
+                    ...GetWorld(worldList, lineText.substring(buffStartIdx))
+                })
+            } else {
+                addChunk(line.chunks,{
+                    idx: buffStartIdx,
+                    deepCode,
+                    deepImpartible: kind === 'comment-multi' || kind === 'code-in-bracket' || kind === 'string' ? deepImpartible : undefined,
+                    kind,
                     text: lineText.substring(buffStartIdx)
                 })
             }
@@ -229,7 +263,7 @@ function getKindStart(ch: string, chidx: number, lineText: string): TTokenKind {
     if (ch === ';') return 'semicolon'
     if (ch === '\'') return 'string'
     if (ch === '[') return 'code-in-bracket'
-    if (space.test(ch)) return 'boundary'
+    if (ch === ' ' && space.test(ch)) return 'boundary'
     if (operator.includes(ch) && ch !== '-' && ch !== '/') return 'operator'
     if (ch === '-' || ch === '/') {
         const nech = getNech(chidx, lineText)
@@ -248,4 +282,12 @@ function getLastChunk(tokens: TTokenLine[]): TTokenLineChunk {
         if (line.chunks.length > 0) return line.chunks[line.chunks.length - 1]
     }
     return undefined
+}
+
+function addChunk(chunks: TTokenLineChunk[], chunk: TTokenLineChunk) {
+    if (chunk.text === '') return
+    chunks.push({
+        ...chunk,
+        deepCode: chunk.deepCode > 0 ? chunk.deepCode : undefined
+    })
 }

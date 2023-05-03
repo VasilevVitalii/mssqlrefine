@@ -1,4 +1,4 @@
-import { Parse, TTokenLine, TParseOption } from "./tokenizator";
+import { Get, TTokenLine, TParseOption } from "./tokenizator";
 import { GetWorldMapList, TWorldCase, kindCodeList, TWorldMap, TWorldFilter } from "./world";
 
 export interface IApp {
@@ -20,6 +20,6 @@ export class App implements IApp {
     }
 
     public getTokens(text: string[], option?: TParseOption): TTokenLine[] {
-        return Parse(text, this._worlds, option)
+        return Get(text, this._worlds, option)
     }
 }

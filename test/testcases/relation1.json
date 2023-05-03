@@ -1,0 +1,473 @@
+{
+    "test": [
+        ";WITH a AS (",
+        "   SELECT a,b",
+        " FROM c) UPDATE q SET q.a = a.a",
+        "FROM tableQ q",
+        "JOIN a ON a.b = q.b",
+        "WHERE q.i IN (SELECT i FROM ddd)"
+    ],
+    "result": [
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "semicolon",
+                    "text": ";"
+                },
+                {
+                    "idx": 1,
+                    "kind": "code",
+                    "kindCode": [
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "WITH"
+                },
+                {
+                    "idx": 5,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 6,
+                    "kind": "code",
+                    "text": "a"
+                },
+                {
+                    "idx": 7,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 8,
+                    "kind": "code",
+                    "kindCode": [
+                        "statement",
+                        "reserved"
+                    ],
+                    "text": "AS"
+                },
+                {
+                    "idx": 10,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 11,
+                    "deepCode": 1,
+                    "kind": "operator",
+                    "text": "("
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "deepCode": 1,
+                    "kind": "boundary",
+                    "text": "   "
+                },
+                {
+                    "idx": 3,
+                    "deepCode": 1,
+                    "kind": "code",
+                    "kindCode": [
+                        "statement",
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "SELECT"
+                },
+                {
+                    "idx": 9,
+                    "deepCode": 1,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 10,
+                    "deepCode": 1,
+                    "kind": "code",
+                    "text": "a"
+                },
+                {
+                    "idx": 11,
+                    "deepCode": 1,
+                    "kind": "comma",
+                    "text": ","
+                },
+                {
+                    "idx": 12,
+                    "deepCode": 1,
+                    "kind": "code",
+                    "text": "b"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "deepCode": 1,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 1,
+                    "deepCode": 1,
+                    "kind": "code",
+                    "kindCode": [
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "FROM"
+                },
+                {
+                    "idx": 5,
+                    "deepCode": 1,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 6,
+                    "deepCode": 1,
+                    "kind": "code",
+                    "text": "c"
+                },
+                {
+                    "idx": 7,
+                    "deepCode": 1,
+                    "kind": "operator",
+                    "text": ")"
+                },
+                {
+                    "idx": 8,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 9,
+                    "kind": "code",
+                    "kindCode": [
+                        "statement",
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "UPDATE"
+                },
+                {
+                    "idx": 15,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 16,
+                    "kind": "code",
+                    "text": "q"
+                },
+                {
+                    "idx": 17,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 18,
+                    "kind": "code",
+                    "kindCode": [
+                        "statement",
+                        "lang",
+                        "reserved"
+                    ],
+                    "text": "SET"
+                },
+                {
+                    "idx": 21,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 22,
+                    "kind": "code",
+                    "text": "q"
+                },
+                {
+                    "idx": 23,
+                    "kind": "point",
+                    "text": "."
+                },
+                {
+                    "idx": 24,
+                    "kind": "code",
+                    "text": "a"
+                },
+                {
+                    "idx": 25,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 26,
+                    "kind": "operator",
+                    "text": "="
+                },
+                {
+                    "idx": 27,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 28,
+                    "kind": "code",
+                    "text": "a"
+                },
+                {
+                    "idx": 29,
+                    "kind": "point",
+                    "text": "."
+                },
+                {
+                    "idx": 30,
+                    "kind": "code",
+                    "text": "a"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "code",
+                    "kindCode": [
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "FROM"
+                },
+                {
+                    "idx": 4,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 5,
+                    "kind": "code",
+                    "text": "tableQ"
+                },
+                {
+                    "idx": 11,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 12,
+                    "kind": "code",
+                    "text": "q"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "code",
+                    "kindCode": [
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "JOIN"
+                },
+                {
+                    "idx": 4,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 5,
+                    "kind": "code",
+                    "text": "a"
+                },
+                {
+                    "idx": 6,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 7,
+                    "kind": "code",
+                    "kindCode": [
+                        "reserved"
+                    ],
+                    "text": "ON"
+                },
+                {
+                    "idx": 9,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 10,
+                    "kind": "code",
+                    "text": "a"
+                },
+                {
+                    "idx": 11,
+                    "kind": "point",
+                    "text": "."
+                },
+                {
+                    "idx": 12,
+                    "kind": "code",
+                    "text": "b"
+                },
+                {
+                    "idx": 13,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 14,
+                    "kind": "operator",
+                    "text": "="
+                },
+                {
+                    "idx": 15,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 16,
+                    "kind": "code",
+                    "text": "q"
+                },
+                {
+                    "idx": 17,
+                    "kind": "point",
+                    "text": "."
+                },
+                {
+                    "idx": 18,
+                    "kind": "code",
+                    "text": "b"
+                }
+            ]
+        },
+        {
+            "chunks": [
+                {
+                    "idx": 0,
+                    "kind": "code",
+                    "kindCode": [
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "WHERE"
+                },
+                {
+                    "idx": 5,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 6,
+                    "kind": "code",
+                    "text": "q"
+                },
+                {
+                    "idx": 7,
+                    "kind": "point",
+                    "text": "."
+                },
+                {
+                    "idx": 8,
+                    "kind": "code",
+                    "text": "i"
+                },
+                {
+                    "idx": 9,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 10,
+                    "kind": "code",
+                    "kindCode": [
+                        "lang",
+                        "reserved"
+                    ],
+                    "text": "IN"
+                },
+                {
+                    "idx": 12,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 13,
+                    "deepCode": 1,
+                    "kind": "operator",
+                    "text": "("
+                },
+                {
+                    "idx": 14,
+                    "deepCode": 1,
+                    "kind": "code",
+                    "kindCode": [
+                        "statement",
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "SELECT"
+                },
+                {
+                    "idx": 20,
+                    "deepCode": 1,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 21,
+                    "deepCode": 1,
+                    "kind": "code",
+                    "text": "i"
+                },
+                {
+                    "idx": 22,
+                    "deepCode": 1,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 23,
+                    "deepCode": 1,
+                    "kind": "code",
+                    "kindCode": [
+                        "query",
+                        "reserved"
+                    ],
+                    "text": "FROM"
+                },
+                {
+                    "idx": 27,
+                    "deepCode": 1,
+                    "kind": "boundary",
+                    "text": " "
+                },
+                {
+                    "idx": 28,
+                    "deepCode": 1,
+                    "kind": "code",
+                    "text": "ddd"
+                },
+                {
+                    "idx": 31,
+                    "deepCode": 1,
+                    "kind": "operator",
+                    "text": ")"
+                }
+            ]
+        }
+    ]
+    
+}

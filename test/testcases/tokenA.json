@@ -40,11 +40,13 @@
                 },
                 {
                     "idx": 18,
+                    "deepCode": 1,
                     "kind": "operator",
                     "text": "("
                 },
                 {
                     "idx": 19,
+                    "deepCode": 1,
                     "kind": "code",
                     "kindCode": [
                         "function-aggregate"
@@ -53,6 +55,7 @@
                 },
                 {
                     "idx": 22,
+                    "deepCode": 1,
                     "kind": "operator",
                     "text": ")"
                 }

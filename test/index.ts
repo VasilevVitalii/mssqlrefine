@@ -6,7 +6,7 @@ import * as mssqldriver from 'mssqldriver'
 import { world } from '../src/world'
 
 
-const onlyFiles = []
+const onlyFiles = [] //['relation1.json']
 const pathtest = path.join(__dirname, '..', '..', 'test')
 const pathtestcases = path.join(pathtest, 'testcases')
 
@@ -40,7 +40,6 @@ world.forEach((w, i) => {
             }
         }
     })
-
 })
 if (hasWordError) {
     console.log('word has error(s)')
@@ -54,16 +53,16 @@ fs.readdir(pathtestcases, (err, files) => {
         return
     }
 
-    files.forEach(file => {
-        try {
-            if (onlyFiles.length > 0) {
-                if (!onlyFiles.includes(file)) return
-            }
+    if (onlyFiles.length > 0) {
+        files = files.filter(f => onlyFiles.includes(f))
+    }
 
+    [...files.filter(f => f.substring(0, 5) === 'token'), ...files.filter(f => f.substring(0, 5) !== 'token')].forEach(file => {
+        try {
             const t = JSON.parse(fs.readFileSync(path.join(pathtestcases, file), 'utf8'))
             const tJsonRes = JSON.stringify(t.result, null, '\t')
             const test = t.test as string[]
-            const p = refineService.getTokens(test)
+            const p = refineService.getTokens(test, { checkRelation: file.substring(0, 5) === 'token' ? undefined : true })
             const pJsonRes = JSON.stringify(p, null, '\t')
 
             if (test.length !== p.length) {
@@ -98,7 +97,7 @@ fs.readdir(pathtestcases, (err, files) => {
                 return
             }
 
-            const p1 = [p[0], ...refineService.getTokens(test.slice(1), { startAt: p.slice(0, 1) })]
+            const p1 = [p[0], ...refineService.getTokens(test.slice(1), { startAt: p.slice(0, 1), checkRelation: file.substring(0, 5) === 'token' ? undefined : true })]
             const p1JsonRes = JSON.stringify(p1, null, '\t')
 
             if (test.length !== p1.length) {

@@ -26,14 +26,7 @@
             ]
         },
         {
-            "chunks": [
-                {
-                    "idx": 0,
-                    "deepImpartible": 1,
-                    "kind": "string",
-                    "text": ""
-                }
-            ]
+            "chunks": []
         },
         {
             "chunks": [
